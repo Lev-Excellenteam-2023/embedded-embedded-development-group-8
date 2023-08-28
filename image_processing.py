@@ -3,17 +3,21 @@ import cv2
 from matplotlib import pyplot as plt
 
 def detect_face_using_yunet(frame):
+    """
+    the function recognize faces in image
+    :param frame:
+    :return:
+    """
     height, width, _ = frame.shape
     detector = cv2.FaceDetectorYN.create("face_detection_yunet_2023mar.onnx", "", (0, 0))
     detector.setInputSize((width, height))
     _, faces = detector.detect(frame)
+    # parameters: x1, y1, w, h, x_re, y_re, x_le, y_le, x_nt, y_nt, x_rcm, y_rcm, x_lcm, y_lcm
     # if faces[1] is None, no face found
-    faces1=[]
     if faces is not None:
-        for i,face in enumerate(faces):
-            # parameters: x1, y1, w, h, x_re, y_re, x_le, y_le, x_nt, y_nt, x_rcm, y_rcm, x_lcm, y_lcm
-            faces1.append(face[:4])
-    return faces1
+        return [face[:4] for face in faces]
+    else:
+        return []
 def frontal_face_detection(frame) -> Sequence[Sequence[int]]:
     """
     the function recognize frontal faces in image
