@@ -1,0 +1,3 @@
+num_of_images=5
+ok_images=3
+time_between_images=1
