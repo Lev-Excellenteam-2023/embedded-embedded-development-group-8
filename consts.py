@@ -1,3 +1,3 @@
-num_of_images=5
-ok_images=3
-time_between_images=1
+NUM_OF_IMAGES=5
+OK_IMAGES=3
+TIME_BETWEEN_IMAGES=1
