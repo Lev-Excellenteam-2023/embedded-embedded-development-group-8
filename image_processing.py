@@ -1,7 +1,19 @@
 from typing import Sequence
 import cv2
+from matplotlib import pyplot as plt
 
-
+def detect_face_using_yunet(frame):
+    height, width, _ = frame.shape
+    detector = cv2.FaceDetectorYN.create("face_detection_yunet_2023mar.onnx", "", (0, 0))
+    detector.setInputSize((width, height))
+    _, faces = detector.detect(frame)
+    # if faces[1] is None, no face found
+    faces1=[]
+    if faces is not None:
+        for i,face in enumerate(faces):
+            # parameters: x1, y1, w, h, x_re, y_re, x_le, y_le, x_nt, y_nt, x_rcm, y_rcm, x_lcm, y_lcm
+            faces1.append(face[:4])
+    return faces1
 def frontal_face_detection(frame) -> Sequence[Sequence[int]]:
     """
     the function recognize frontal faces in image
@@ -44,7 +56,7 @@ def nose_detection(frame):
     noseCascade = cv2.CascadeClassifier("../haarcascade_mcs_nose.xml")
     frame = frame.copy()
     gray_image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    nose = noseCascade.detectMultiScale(gray_image, 1.7, 5)
+    nose = noseCascade.detectMultiScale(gray_image, 1.7, 7)
     return nose
 
 #def predict_age(frame,start_x,start_y,w,h):
@@ -76,8 +88,6 @@ def nose_detection(frame):
     #age_confidence_score = age_preds[0][i]
     #label = f"Age:{age} - {age_confidence_score * 100:.2f}%"
     #return age
-
-
 
 
 
