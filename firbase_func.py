@@ -20,6 +20,11 @@ users_ref = db.reference("/Users")  # Reference to Firebase database
 
 
 def save_nursery(nursery: Nursery):
+    """
+    Saving nursery in a database
+    :param nursery:
+    :return:
+    """
     new_data_ref = nursery_ref.push({
         'manager_id': nursery.manager_id,
         'contacts': nursery.contacts,
@@ -30,6 +35,11 @@ def save_nursery(nursery: Nursery):
 
 
 def save_users(user: User):
+    """
+    Saving nursery in a database.
+    :param user:
+    :return:
+    """
     new_data_ref = users_ref.push({
         'user_id': user.user_id,
         'state': user.state,
@@ -63,10 +73,17 @@ def update_notification(flag: bool):
 
 
 def get_nursery_ref():
+    """
+    :return:The function returns the tables of nursery from firbase.
+    """
     return nursery_ref.get()
 
 
 def get_users_ref():
+    """
+    The function returns the tables of users from firbase.
+    :return:
+    """
     return users_ref.get()
 
 
@@ -135,20 +152,3 @@ def add_contact(code: str, chat_id: int) -> bool:
             nursery_ref.child(key).update({"contacts": l})
             return True
     return False
-
-
-def main():
-    update_notification(444, False)
-    # a = get_nursery_ref()
-    # # for i in a.keys():
-    # #     print(a[i]["manager_id"])
-    # # list_id=[for i in a.keys()]
-    # # print(a
-    # u = User(444)
-    # save_users(u)
-    # print(get_nursery(653029654))
-    # print(get_user(444))
-
-
-if __name__ == '__main__':
-    main()
