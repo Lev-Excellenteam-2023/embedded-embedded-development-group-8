@@ -14,7 +14,7 @@ def main():
         images = camera.capture_5_images()
 
 
-        if identify_rolling(images, num_childs):# if true there is a danger
+        if (identify_rolling(images, num_childs)):# if true there is a danger
             pass
             #send_image according to how we send the signal
 
