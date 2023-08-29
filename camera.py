@@ -4,6 +4,8 @@ import time
 import consts
 
 
+# I have to change with the consts
+
 def capture_5_images():
     """
     :return: list of frames
@@ -37,8 +39,4 @@ def capture_5_images():
 
         else:
             print("Cannot open camera")
-
-
-
-
 
