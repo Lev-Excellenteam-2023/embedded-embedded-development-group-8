@@ -38,11 +38,6 @@ def capture_5_images():
         else:
             print("Cannot open camera")
 
-def main():
-    capture_5_images()
-
-if __name__ == "__main__":
-    main()
 
 
 
