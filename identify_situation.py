@@ -1,4 +1,4 @@
-
+#change numof child when yska make push to git on the database because there is there a function that receeive number of children
 def identify_rolling(*imgs, num_childs):
     """
     param: list of frames
