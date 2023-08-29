@@ -6,9 +6,9 @@ import numpy as np
 
 def detect_face_using_yunet(frame:np.ndarray)->list:
     """
-    the function recognize faces in image
-    :param frame:
-    :return:
+    the function recognize faces in image using YuNet
+    :param frame: image
+    :return: (x, y, w, h) for all recognized faces in float type
     """
     height, width, _ = frame.shape
     detector = cv2.FaceDetectorYN.create("face_detection_yunet_2023mar.onnx", "", (0, 0))
@@ -20,10 +20,11 @@ def detect_face_using_yunet(frame:np.ndarray)->list:
         return [face[:4] for face in faces]
     else:
         return []
+
 def frontal_face_detection(frame:np.ndarray) -> Sequence[Sequence[int]]:
     """
     the function recognize frontal faces in image
-    :param img: image
+    :param frame: image
     :return: (x, y, w, h) for all recognized faces
     """
     gray_image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -32,10 +33,11 @@ def frontal_face_detection(frame:np.ndarray) -> Sequence[Sequence[int]]:
     )
     face = face_classifier.detectMultiScale(gray_image, scaleFactor=1.3, minNeighbors=5)
     return face
+
 def profile_face_detection(frame:np.ndarray) -> Sequence[Sequence[int]]:
     """
     the function recognize profile faces in image
-    :param img: image
+    :param frame: image
     :return: (x, y, w, h) for all recognized faces
     """
     gray_image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -56,7 +58,7 @@ def profile_face_detection(frame:np.ndarray) -> Sequence[Sequence[int]]:
 def nose_detection(frame:np.ndarray):
     """
      the function recognize noses in image
-     :param img: image
+     :param frame: image
      :return: (x, y, w, h) for all recognized noses
      """
     noseCascade = cv2.CascadeClassifier("../haarcascade_mcs_nose.xml")
