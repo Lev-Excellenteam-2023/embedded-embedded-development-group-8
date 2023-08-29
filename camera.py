@@ -27,7 +27,9 @@ def capture_5_images():
                     # press 'q' to break out of the loop
                     if cv2.waitKey(1) & 0xFF == ord('q'):
                         break
+
                     if len(frame_list) == consts.NUM_OF_IMAGES:
+
                         return frame_list
 
             else:
@@ -35,3 +37,13 @@ def capture_5_images():
 
         else:
             print("Cannot open camera")
+
+def main():
+    capture_5_images()
+
+if __name__ == "__main__":
+    main()
+
+
+
+
