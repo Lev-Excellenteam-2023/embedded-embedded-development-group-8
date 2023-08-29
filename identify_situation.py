@@ -6,7 +6,7 @@ def identify_rolling(*imgs, num_childs):
     """
     count = 0
     for img in imgs:
-        if len(identifyFrontalFaces(img))==num_childs || len(identifyNose(img))==num_childs || len(identifyProfileFaces(img))==num_childs:
+        if len(identifyFrontalFaces(img))==num_childs || len(identifyNose(img))==num_childs || len(identifyProfileFaces(img))==num_childs || len(detect_face_using_yunet(img))==num_childs:
             count = count + 1
 
     if count >= 3:
