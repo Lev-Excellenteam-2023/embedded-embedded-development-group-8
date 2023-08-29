@@ -4,7 +4,6 @@ import time
 import consts
 
 
-# I have to change with the consts
 
 def capture_5_images():
     """
@@ -13,7 +12,7 @@ def capture_5_images():
 
     frame_list = []
     # Create an object to hold reference to camera video capturing
-    capture = cv2.VideoCapture(0)
+    capture = cv2.VideoCapture(1)
 
     while True:
 
