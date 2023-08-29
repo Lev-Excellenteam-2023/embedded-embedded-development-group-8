@@ -1,8 +1,10 @@
 from typing import Sequence
 import cv2
-from matplotlib import pyplot as plt
+import numpy as np
 
-def detect_face_using_yunet(frame):
+
+
+def detect_face_using_yunet(frame:np.ndarray)->list:
     """
     the function recognize faces in image
     :param frame:
@@ -18,7 +20,7 @@ def detect_face_using_yunet(frame):
         return [face[:4] for face in faces]
     else:
         return []
-def frontal_face_detection(frame) -> Sequence[Sequence[int]]:
+def frontal_face_detection(frame:np.ndarray) -> Sequence[Sequence[int]]:
     """
     the function recognize frontal faces in image
     :param img: image
@@ -30,7 +32,7 @@ def frontal_face_detection(frame) -> Sequence[Sequence[int]]:
     )
     face = face_classifier.detectMultiScale(gray_image, scaleFactor=1.3, minNeighbors=5)
     return face
-def profile_face_detection(frame) -> Sequence[Sequence[int]]:
+def profile_face_detection(frame:np.ndarray) -> Sequence[Sequence[int]]:
     """
     the function recognize profile faces in image
     :param img: image
@@ -51,7 +53,7 @@ def profile_face_detection(frame) -> Sequence[Sequence[int]]:
         return face
     return face+right
 
-def nose_detection(frame):
+def nose_detection(frame:np.ndarray):
     """
      the function recognize noses in image
      :param img: image
@@ -62,38 +64,4 @@ def nose_detection(frame):
     gray_image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     nose = noseCascade.detectMultiScale(gray_image, 1.7, 7)
     return nose
-
-#def predict_age(frame,start_x,start_y,w,h):
-    """
-
-    :param frame:
-    :param start_x:
-    :param start_y:
-    :param w:
-    :param h:
-    :return:
-    """
-   # frame = frame.copy()
-    #end_x = start_x + w
-    #end_y = start_y + h
-    #face_img = frame[start_y: end_y, start_x: end_x]
-    # image --> Input image to preprocess before passing it through our dnn for classification.
-    #blob = cv2.dnn.blobFromImage(
-     #   image=face_img, scalefactor=1.0, size=(227, 227),
-      #  mean=age_model.MODEL_MEAN_VALUES, swapRB=False
-    #)
-    # Predict Age
-    #age_model.age_net.setInput(blob)
-    #age_preds = age_model.age_net.forward()
-    #for i in range(age_preds[0].shape[0]):
-     #   print(f"{age_model.AGE_INTERVALS[i]}: {age_preds[0, i] * 100:.2f}%")
-    #i = age_preds[0].argmax()
-    #age = age_model.AGE_INTERVALS[i]
-    #age_confidence_score = age_preds[0][i]
-    #label = f"Age:{age} - {age_confidence_score * 100:.2f}%"
-    #return age
-
-
-
-
 
