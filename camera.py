@@ -20,10 +20,9 @@ def capture_5_images():
             ret, frame = capture.read()  # capture a frame from live video
             time.sleep(consts.TIME_BETWEEN_IMAGES)
             if ret:
-                #while True:
                 frame_list.append(frame)
                 # we can delete this after it is just to see that it take picture
-                cv2.imshow("Frame", frame)  # show captured frame
+                #cv2.imshow("Frame", frame)  # show captured frame
 
                 # press 'q' to break out of the loop
                 if cv2.waitKey(1) & 0xFF == ord('q'):
