@@ -1,5 +1,7 @@
+import datetime
 import os
-from firbase_class import Nursery, User
+from firbase_class import Nursery, User, Notification
+import datetime
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
@@ -17,7 +19,7 @@ default_app = firebase_admin.initialize_app(cred, {
 
 nursery_ref = db.reference("/Nurseries")  # Reference to Firebase database
 users_ref = db.reference("/Users")  # Reference to Firebase database
-
+notification_ref = db.reference("/Notification")
 
 def save_nursery(nursery: Nursery):
     """
@@ -30,7 +32,7 @@ def save_nursery(nursery: Nursery):
         'contacts': nursery.contacts,
         'notification': nursery.notification,
         'num_babies': nursery.num_babies,
-        "screat_code": nursery.screat_code
+        "secret_code": nursery.secret_code
     })
 
 
@@ -45,6 +47,20 @@ def save_users(user: User):
         'state': user.state,
         'manager_id': user.manager_id
     })
+def save_notification(notification: Notification):
+    """
+    Saving notification
+    :param notification:
+    :return:
+    """
+    new_data_ref = notification_ref.push({
+        'secret_code': notification.secret_code,
+        'id_notification': notification.id_notification,
+        'start_time': notification.start_time,
+        'end_time': notification.end_time,
+        'user_id': notification.user_id
+
+    })
 
 
 def update_notification(id: int, flag: bool):
@@ -55,6 +71,8 @@ def update_notification(id: int, flag: bool):
     :return:
     """
     nursery = get_nursery_ref()
+    if nursery == None:
+        return None
     for key, value in nursery.items():
         if value["manager_id"] == id:
             nursery_ref.child(key).update({"notification": flag})
@@ -68,6 +86,8 @@ def update_notification(flag: bool):
     :return:
     """
     nursery = get_nursery_ref()
+    if nursery == None:
+        return None
     for key, value in nursery.items():
         nursery_ref.child(key).update({"notification": flag})
 
@@ -109,8 +129,10 @@ def find_nursery_by_id(id: str) -> Nursery:
     found, the function will return None. :param id:identifier of nursery. :return: nursery or None if not found.
     """
     table_nursery = get_nursery_ref()
+    if table_nursery is None:
+        return None
     for i in table_nursery.keys():
-        if table_nursery[i]["screat_code"] == id:
+        if table_nursery[i]["secret_code"] == id:
             return table_nursery[i]
     return None
 
@@ -131,6 +153,7 @@ def get_user(user_id: int) -> User:
     return None
 
 
+
 def add_contact(code: str, chat_id: int) -> bool:
     """
     The function adds a contact to the list of contacts in nursery.
@@ -142,7 +165,7 @@ def add_contact(code: str, chat_id: int) -> bool:
     if nursery == None:
         return False
     for key, value in nursery.items():
-        if value["screat_code"] == code:
+        if value["secret_code"] == code:
             new_user = User(chat_id)
             new_user.manager_id = value["manager_id"]
             save_users(new_user)
@@ -152,3 +175,61 @@ def add_contact(code: str, chat_id: int) -> bool:
             nursery_ref.child(key).update({"contacts": l})
             return True
     return False
+
+
+def get_notification_ref():
+    """
+        The function returns the table of notifications from firbase.
+        :return:
+        """
+    return notification_ref.get()
+
+
+def search_notification (secret_code: str )-> list(Notification):
+    """
+        param: secret code: it is the nursery_id
+        return: The function returns list of notification of the specific nursery.
+    """
+    notification_list = []
+    table_notification = get_notification_ref()
+    if table_notification == None:
+        return None
+    for i in table_notification.keys():
+        if table_notification[i]["secret_code"] == secret_code:
+            notification_list.append(table_notification[i])
+
+    return notification_list
+
+def calculate_average_reaction_time(secret_code: str)-> datetime.time:
+    notification_list = search_notification(secret_code)
+    number_of_notification = len(notification_list)
+    total_time = 0
+    
+    for notification in notification_list:
+
+        average_time = total_reaction_time / total_reactions
+        return average_time
+
+
+
+def calculate_average_reaction_time(nursery_id: str) -> float:
+    nursery = find_nursery_by_id(nursery_id)
+    if not nursery:
+        return None
+
+    users = get_users_ref()
+    total_reaction_time = 0
+    total_reactions = 0
+
+    for user_id, user_data in users.items():
+        if user_data["manager_id"] == nursery["manager_id"]:
+            if user_data.get("reaction_time"):
+                reaction_time = user_data["reaction_time"]
+                total_reaction_time += reaction_time
+                total_reactions += 1
+
+    if total_reactions == 0:
+        return 0  # No reactions recorded, returning 0 as average
+
+    average_time = total_reaction_time / total_reactions
+    return average_time
