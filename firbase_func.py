@@ -184,32 +184,39 @@ def get_notification_ref():
         """
     return notification_ref.get()
 
+def get_num_babies():
+    nursery = get_nursery_ref()
+    if nursery == None:
+        return 0
+    for key, value in nursery.items():
+        return value["num_babies"]
+    return 0
 
-def search_notification (secret_code: str )-> list(Notification):
-    """
-        param: secret code: it is the nursery_id
-        return: The function returns list of notification of the specific nursery.
-    """
-    notification_list = []
-    table_notification = get_notification_ref()
-    if table_notification == None:
-        return None
-    for i in table_notification.keys():
-        if table_notification[i]["secret_code"] == secret_code:
-            notification_list.append(table_notification[i])
-
-    return notification_list
-def calculate_average_reaction_time(secret_code: str)-> float:
-    notification_list = search_notification(secret_code)
-    number_of_notification = 0
-    total_time = 0
-
-    for notification in notification_list:
-        if notification.end_time != None:
-            number_of_notification += 1
-            total_time += (notification.end_time - notification.start_time)
-
-        average_time = total_time / number_of_notification
-        return average_time
+# def search_notification (secret_code: str )-> list(Notification):
+#     """
+#         param: secret code: it is the nursery_id
+#         return: The function returns list of notification of the specific nursery.
+#     """
+#     notification_list = []
+#     table_notification = get_notification_ref()
+#     if table_notification == None:
+#         return None
+#     for i in table_notification.keys():
+#         if table_notification[i]["secret_code"] == secret_code:
+#             notification_list.append(table_notification[i])
+#
+#     return notification_list
+# def calculate_average_reaction_time(secret_code: str)-> float:
+#     notification_list = search_notification(secret_code)
+#     number_of_notification = 0
+#     total_time = 0
+#
+#     for notification in notification_list:
+#         if notification.end_time != None:
+#             number_of_notification += 1
+#             total_time += (notification.end_time - notification.start_time)
+#
+#         average_time = total_time / number_of_notification
+#         return average_time
 
 
