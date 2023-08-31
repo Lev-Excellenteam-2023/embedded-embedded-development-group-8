@@ -4,33 +4,13 @@ import requests
 from flask import Flask, request, Response
 import telegram
 import time
-
+import consts
+from consts import TOKEN
 from firbase_class import Nursery, User
 from firbase_func import get_nursery_ref, get_user, update_notification, save_nursery, save_users,find_nursery_by_id,add_contact
 
 
-#******************************************
-# const
-msg_notification = "There is a baby in danger send /stop_notification to stop the notification"
-msg_new_user = "Welcome, if you are manager of a nursery enter a secret code and number of babies. if you are contact enter a secret code of the nursery"
-msg_not_valid_command = "Select a valid command"
-msg_stop_notification = "The notification is off"
-msg_incorrect_code = "The secret code is incorrect\n" + msg_new_user
-msg_succeeded_new_nursery = "The nursery required for the system Welcome!\n ID nursery ="
-msg_entry_options = "You are not registered in the system.\n There are two entry options:\n 1. If you are an manager of nursery /manager\n2. If you are a kindergarten contact /contact \n"
-msg_secret_code_nursery_wrong="secret code of nursery wrong\n" + msg_new_user
-msg_add_new_contact="Adding the contact was successful"
-SECRET_CODE=100
-
-webhook=os.environ["webhook"]
-TOKEN = os.environ["TELEGRAM_TOKEN"]
-TELEGRAM_INIT_WEBHOOK_URL="https://api.telegram.org/bot"+TOKEN+"/setWebhook?url="+webhook+"/message"
-
-#******************************************
-
-
-requests.get(TELEGRAM_INIT_WEBHOOK_URL)  # למה צריך את זה???
-
+requests.get(consts.TELEGRAM_INIT_WEBHOOK_URL)
 app = Flask(__name__)
 
 
@@ -43,9 +23,9 @@ def stop_notification(id: int)->str:
     """
     user = get_user(id)
     if user==None:
-        return msg_entry_options
+        return consts.msg_entry_options
     update_notification( False)
-    return msg_stop_notification
+    return consts.msg_stop_notification
 
 
 def send_msg(msg:str, id:int):
@@ -65,9 +45,9 @@ def new_contact(code: str, chat_id:int)->str:
     :return: Returns a message to be sent to the user, saying whether adding the contact was successful or not.
     """
     if add_contact(code,chat_id):
-        return msg_add_new_contact
+        return consts.msg_add_new_contact
     else:
-        return msg_new_user
+        return consts.msg_new_user
 
 #The function currently exists for testing, but it needs to be deleted.
 def start_notification(flag):
@@ -85,20 +65,20 @@ def new_id(txt:str, chat_id:int)->str:
     s = txt.split()
     if len(s) == 2:
         code = s[0]
-        if code == str(SECRET_CODE):
+        if code == str(consts.SECRET_CODE):
             num_babies = s[1]
             new_nursery = Nursery(chat_id, num_babies)
             new_user = User(chat_id)
             new_user.manager_id=chat_id
             save_nursery(new_nursery)
             save_users(new_user)
-            return msg_succeeded_new_nursery+new_nursery.secret_code
+            return consts.msg_succeeded_new_nursery+new_nursery.secret_code
         else:
-            return msg_new_user
+            return consts.msg_new_user
     if len(s)==1:
         return new_contact(txt, chat_id)
     else:
-        return msg_new_user
+        return consts.msg_new_user
 
 
 
@@ -125,19 +105,24 @@ def handle_message():
         try:
             msg_send=state[msg](chat_id)
         except:
-            msg_send=msg_not_valid_command+" /stop_notification " +"/start_notification"
+            msg_send=consts.msg_not_valid_command+" /stop_notification " +"/start_notification"
     send_msg(msg_send,chat_id)
     return Response("success")
 
 
 def send_notification():
+    """
+    he function sends notifications to all the genes whose notification is on.
+    :return:
+    """
     while True:
         nursery=get_nursery_ref()
         if nursery!=None:
             for id in nursery:
                 if nursery[id]["notification"]:
                     for id in nursery[id]["contacts"]:
-                        send_msg(msg_notification, id)
+                        send_msg(consts.msg_notification, id)
+            time.sleep(5)
 
 
 def start_telegram_warks():

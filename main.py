@@ -1,12 +1,7 @@
-import threading
-
 import camera
-from firbase_func import  get_nursery,get_num_babies
-
-from camera import capture_5_images
+from firbase_func import  get_num_babies
 import identify_situation
-from telgram_bot import start_notification,start_telegram_warks
-# from firbase_func import update_notification
+from telgram_bot import start_notification
 
 
 def main():
@@ -25,9 +20,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # t1 = threading.Thread(target=start_telegram_warks, args=())
-    # t2 = threading.Thread(target=main, args=())
-    # t1.start()
-    # t2.start()
-    # t1.join()
-    # t2.join()
