@@ -21,14 +21,11 @@ msg_entry_options = "You are not registered in the system.\n There are two entry
 msg_secret_code_nursery_wrong="secret code of nursery wrong\n" + msg_new_user
 msg_add_new_contact="Adding the contact was successful"
 SECRET_CODE=100
-# TOKEN = os.environ["TELEGRAM_TOKEN"]
-# init_webhook = os.environ["TELEGRAM_INIT_WEBHOOK_URL"]
-# init_webhook="https://api.telegram.org/bot{}/setWebhook?url\=https://37ba-62-219-32-82.ngrok-free.app/message"
 
-# TELEGRAM_INIT_WEBHOOK_URL = init_webhook.format(TOKEN)
+webhook=os.environ["webhook"]
+TOKEN = os.environ["TELEGRAM_TOKEN"]
+TELEGRAM_INIT_WEBHOOK_URL="https://api.telegram.org/bot"+TOKEN+"/setWebhook?url="+webhook+"/message"
 
-TOKEN = "6338103213:AAHJeFKYIHpsCY2PqDJslBo40gk2giGP24M"
-TELEGRAM_INIT_WEBHOOK_URL="https://api.telegram.org/bot{}/setWebhook?url=https://b8f6-62-219-32-82.ngrok-free.app/message".format(TOKEN)
 #******************************************
 
 
@@ -95,7 +92,7 @@ def new_id(txt:str, chat_id:int)->str:
             new_user.manager_id=chat_id
             save_nursery(new_nursery)
             save_users(new_user)
-            return msg_succeeded_new_nursery+new_nursery.screat_code
+            return msg_succeeded_new_nursery+new_nursery.secret_code
         else:
             return msg_new_user
     if len(s)==1:
