@@ -170,7 +170,7 @@ def add_contact(code: str, chat_id: int) -> bool:
             new_user.manager_id = value["manager_id"]
             save_users(new_user)
             print(value["contacts"])
-            l=value["contacts"]+[chat_id]
+            l = value["contacts"]+[chat_id]
             print(l)
             nursery_ref.child(key).update({"contacts": l})
             return True
@@ -199,37 +199,17 @@ def search_notification (secret_code: str )-> list(Notification):
             notification_list.append(table_notification[i])
 
     return notification_list
-
-def calculate_average_reaction_time(secret_code: str)-> datetime.time:
+def calculate_average_reaction_time(secret_code: str)-> float:
     notification_list = search_notification(secret_code)
-    number_of_notification = len(notification_list)
+    number_of_notification = 0
     total_time = 0
-    
-    for notification in notification_list:
 
-        average_time = total_reaction_time / total_reactions
+    for notification in notification_list:
+        if notification.end_time != None:
+            number_of_notification += 1
+            total_time += (notification.end_time - notification.start_time)
+
+        average_time = total_time / number_of_notification
         return average_time
 
 
-
-def calculate_average_reaction_time(nursery_id: str) -> float:
-    nursery = find_nursery_by_id(nursery_id)
-    if not nursery:
-        return None
-
-    users = get_users_ref()
-    total_reaction_time = 0
-    total_reactions = 0
-
-    for user_id, user_data in users.items():
-        if user_data["manager_id"] == nursery["manager_id"]:
-            if user_data.get("reaction_time"):
-                reaction_time = user_data["reaction_time"]
-                total_reaction_time += reaction_time
-                total_reactions += 1
-
-    if total_reactions == 0:
-        return 0  # No reactions recorded, returning 0 as average
-
-    average_time = total_reaction_time / total_reactions
-    return average_time
