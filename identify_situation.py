@@ -10,21 +10,17 @@ def identify_rolling(imgs, num_childs):
     param: list of frames
     return:  true if baby in danger
     """
-    angle=45
+    angle=90
     count = 0
     for source_img in imgs:
         new=source_img
         count_rotate_image = 0
+        count_face=0
         for i in range(int(360/angle)):
             new = rotate_image(new,angle*i)
-            if (len(image_processing.frontal_face_detection(new)) == int(num_childs)) or \
-                    (len(image_processing.profile_face_detection(new)) == int(num_childs)) or \
-                    (len(image_processing.detect_face_using_yunet(new)) == int(num_childs)):
-                count_rotate_image=count_rotate_image+1
-        if count_rotate_image>0:
+            count_face=count_face+len(image_processing.detect_face_using_yunet(new))
+        if count_face==int(num_childs):
             count = count + 1
-                #(len(image_processing.nose_detection(img)) == int(num_childs)) or \
-
     if count >= consts.OK_IMAGES:
         return False
     return True
