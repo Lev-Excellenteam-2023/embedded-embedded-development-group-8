@@ -112,17 +112,21 @@ def handle_message():
 
 def send_notification():
     """
-    he function sends notifications to all the genes whose notification is on.
+    The function sends notifications to all the genes whose notification is on.
     :return:
     """
     while True:
-        nursery=get_nursery_ref()
-        if nursery!=None:
+        nursery = get_nursery_ref()
+        if nursery is not None:
             for id in nursery:
-                if nursery[id]["notification"]:
-                    for id in nursery[id]["contacts"]:
-                        send_msg(consts.msg_notification, id)
-            time.sleep(5)
+                if "notification" in nursery[id]:
+                    if nursery[id]["notification"] == "rolling":
+                        for contact_id in nursery[id]["contacts"]:
+                            send_msg(consts.msg_notification, contact_id)
+                    elif nursery[id]["notification"] == "not_moving":
+                        for contact_id in nursery[id]["contacts"]:
+                            send_msg(consts.msg_movement, contact_id)
+        time.sleep(5)
 
 
 def start_telegram_warks():
