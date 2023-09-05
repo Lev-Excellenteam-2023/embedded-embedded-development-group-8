@@ -16,6 +16,11 @@ def main():
             print("baby in danger")
         else:
             print("no baby in danger")
+        if(identify_situation.identify_if_someone_didnt_move(images)):
+            print("someone not moving")
+        else:
+            print("everyone moving")
+
 
 
 
