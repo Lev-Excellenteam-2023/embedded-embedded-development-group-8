@@ -1,10 +1,10 @@
 from typing import Sequence
 import cv2
 import numpy as np
+from mp_persondet import MPPersonDet
 
 
-
-def detect_face_using_yunet(frame:np.ndarray)->list:
+def detect_face_using_yunet(frame: np.ndarray) -> list:
     """
     the function recognize faces in image using YuNet
     :param frame: image
@@ -23,7 +23,7 @@ def detect_face_using_yunet(frame:np.ndarray)->list:
         return []
 
 
-def frontal_face_detection(frame:np.ndarray) -> Sequence[Sequence[int]]:
+def frontal_face_detection(frame: np.ndarray) -> Sequence[Sequence[int]]:
     """
     the function recognize frontal faces in image
     :param frame: image
@@ -35,7 +35,8 @@ def frontal_face_detection(frame:np.ndarray) -> Sequence[Sequence[int]]:
     face = face_classifier.detectMultiScale(gray_image, scaleFactor=1.3, minNeighbors=5)
     return face
 
-def profile_face_detection(frame:np.ndarray) -> Sequence[Sequence[int]]:
+
+def profile_face_detection(frame: np.ndarray) -> Sequence[Sequence[int]]:
     """
     the function recognize profile faces in image
     :param frame: image
@@ -55,7 +56,8 @@ def profile_face_detection(frame:np.ndarray) -> Sequence[Sequence[int]]:
         return face
     return face + right
 
-def nose_detection(frame:np.ndarray):
+
+def nose_detection(frame: np.ndarray):
     """
      the function recognize noses in image
      :param frame: image
@@ -67,3 +69,74 @@ def nose_detection(frame:np.ndarray):
     nose = noseCascade.detectMultiScale(gray_image, 1.7, 7)
     return nose
 
+
+def crop_image(image, start_x, start_y, width, height):
+    """
+        Crop a region from the input image.
+
+        :param image: The input image from which to crop.
+        :param start_x: The starting X-coordinate of the crop region.
+        :param start_y: The starting Y-coordinate of the crop region.
+        :param width: The width of the crop region.
+        :param height: The height of the crop region.
+        :return: The cropped region of the input image.
+    """
+    if start_x < 0:
+        start_x = 0
+    if start_y < 0:
+        start_y = 0
+
+    end_y = start_y + height
+    end_x = start_x + width
+
+    if end_y > image.shape[0]:
+        end_y = image.shape[0]
+    if end_x > image.shape[1]:
+        end_x = image.shape[1]
+
+    return image[start_y:end_y, start_x:end_x]
+
+
+def identify_full_body(img):
+    backend_id = cv2.dnn.DNN_BACKEND_OPENCV
+    target_id = cv2.dnn.DNN_TARGET_CPU
+
+    # Instantiate MPPersonDet
+    model = MPPersonDet(modelPath='./person_detection_mediapipe_2023mar.onnx',
+                        nmsThreshold=0.3,
+                        scoreThreshold=0.5,
+                        topK=1,
+                        backendId=backend_id,
+                        targetId=target_id)
+
+    return model.infer(img)
+
+
+def movement_detection(imgs):
+    """
+        Detect movement in a sequence of images.
+
+        :param images: A list of input images.
+        :return: True if movement is detected in any of the images, False otherwise.
+    """
+    mog = cv2.createBackgroundSubtractorMOG2()
+    total_pixels  = imgs[0].shape[0] * imgs[0].shape[1]
+    for i, img in enumerate(imgs):
+        if img is not None and not img.size == 0:  # Check if img is valid
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+            fgmask = mog.apply(gray)
+            kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+            fgmask = cv2.erode(fgmask, kernel, iterations=1)
+            fgmask = cv2.dilate(fgmask, kernel, iterations=1)
+
+            contours, hierarchy = cv2.findContours(fgmask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            if i == 0:
+                continue
+            for contour in contours:
+                # Ignore small contours
+                if cv2.contourArea(contour) < total_pixels  / 307:
+                    continue
+                return True
+
+    return False
