@@ -78,7 +78,7 @@ def update_notification(id: int, flag: bool):
             nursery_ref.child(key).update({"notification": flag})
 
 
-def update_notification(flag: bool):
+def update_notification(flag):
     """
     The function activates/deactivates a notification in all nursery (The initial plan works to have one nursery)
     The function is temporary because later we will want to identify the gene where there is a problem

@@ -4,6 +4,7 @@ NUM_OF_IMAGES=5
 OK_IMAGES=3
 TIME_BETWEEN_IMAGES=1
 
+msg_movement="one of the babies not moving! send /stop_notification to stop the notification"
 msg_notification = "There is a baby in danger send /stop_notification to stop the notification"
 msg_new_user = "Welcome, if you are manager of a nursery enter a secret code and number of babies. if you are contact enter a secret code of the nursery"
 msg_not_valid_command = "Select a valid command"
@@ -16,5 +17,5 @@ msg_add_new_contact="Adding the contact was successful"
 SECRET_CODE=100
 
 webhook=os.environ["webhook"]
-TOKEN = os.environ["TELEGRAM_TOKEN"]
+TOKEN = os.environ["TOKEN"]
 TELEGRAM_INIT_WEBHOOK_URL="https://api.telegram.org/bot"+TOKEN+"/setWebhook?url="+webhook+"/message"
