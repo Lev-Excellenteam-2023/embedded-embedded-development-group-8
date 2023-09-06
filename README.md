@@ -38,3 +38,9 @@ We implement a user-friendly Flask-based web application to handle incoming mess
 Embedded Development
 Our project showcases embedded development by efficiently implementing the baby monitoring system on a resource-constrained Linux VM.
 
+Getting Started
+To start using the Baby Monitoring System, follow these simple steps:
+Clone this Repository: Use the git clone command to make a local copy of this repository.
+Run main.py- This command will launch the core functionality of the Baby Monitoring System.
+Run telgramboy.py- This command will initiate the Telegram Bot component of the system, allowing you to interact with it.
+With these steps, you'll have the Baby Monitoring System up and running, ready to provide safety and real-time monitoring for infants in your nursery environment.
