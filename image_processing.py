@@ -57,7 +57,7 @@ def profile_face_detection(frame: np.ndarray) -> Sequence[Sequence[int]]:
     return face + right
 
 
-def nose_detection(frame: np.ndarray):
+def nose_detection(frame: np.ndarray)-> Sequence[Sequence[int]]:
     """
      the function recognize noses in image
      :param frame: image
@@ -70,7 +70,7 @@ def nose_detection(frame: np.ndarray):
     return nose
 
 
-def crop_image(image, start_x, start_y, width, height):
+def crop_image(image: np.ndarray, start_x: int, start_y: int, width: int, height: int) -> np.ndarray:
     """
         Crop a region from the input image.
 
@@ -97,7 +97,7 @@ def crop_image(image, start_x, start_y, width, height):
     return image[start_y:end_y, start_x:end_x]
 
 
-def identify_full_body(img):
+def identify_full_body(img: str) -> dict:
     backend_id = cv2.dnn.DNN_BACKEND_OPENCV
     target_id = cv2.dnn.DNN_TARGET_CPU
 
@@ -112,16 +112,16 @@ def identify_full_body(img):
     return model.infer(img)
 
 
-def movement_detection(imgs):
+def movement_detection(imgs:list)->bool:
     """
         Detect movement in a sequence of images.
 
-        :param images: A list of input images.
+        :param imgs: A list of input images.
         :return: True if movement is detected in any of the images, False otherwise.
     """
     mog = cv2.createBackgroundSubtractorMOG2()
     total_pixels  = imgs[0].shape[0] * imgs[0].shape[1]
-    for i, img in enumerate(imgs):
+    for index, img in enumerate(imgs):
         if img is not None and not img.size == 0:  # Check if img is valid
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -131,7 +131,7 @@ def movement_detection(imgs):
             fgmask = cv2.dilate(fgmask, kernel, iterations=1)
 
             contours, hierarchy = cv2.findContours(fgmask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            if i == 0:
+            if index == 0:
                 continue
             for contour in contours:
                 # Ignore small contours

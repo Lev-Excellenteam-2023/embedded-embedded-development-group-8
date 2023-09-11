@@ -5,7 +5,7 @@ import consts
 import numpy as np
 
 
-def identify_rolling(imgs, num_childs):
+def identify_rolling(imgs:list, num_childs:int)->bool:
     """
     Detect Baby's Rolling Behavior
     param: list of frames
@@ -27,7 +27,7 @@ def identify_rolling(imgs, num_childs):
     return True
 
 
-def identify_if_someone_didnt_move(images):
+def identify_if_someone_didnt_move(images:list)->bool:
     """
     Crop images for each person and store them in the person info dictionary for each person.
     Check if the person moved.
@@ -66,7 +66,7 @@ def identify_if_someone_didnt_move(images):
     return False
 
 
-def rotate_image(img, angle):
+def rotate_image(img: np.ndarray, angle: float) -> np.ndarray:
     """
     Rotate an image by a specified angle.
     :param img: the img to rotate
